@@ -1,1 +1,33 @@
 
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.nimtala.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.nimtala.app'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+}
