@@ -1,43 +1,28 @@
-name: Build NimTala APK
+plugins {
+    id 'com.android.application'
+}
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+android {
+    namespace 'com.nimtala.app'
+    compileSdk 35
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+    defaultConfig {
+        applicationId 'com.nimtala.app'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+    }
+}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+    }
+}
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Android
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK
-        run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
-      - name: Extract project ZIP
-        run: unzip -o NimTala-project.zip
-
-      - name: Build APK
-        working-directory: NimTala-project/NimTala
-        run: |
-          gradle assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NimTala-APK
-          path: NimTala-project/NimTala/app/build/outputs/apk/debug/app-debug.apk
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+}
