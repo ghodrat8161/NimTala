@@ -15,28 +15,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install SDK
+      - name: Install Android SDK
         run: |
-          yes | sdkmanager --licenses || true
+          yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Extract ZIP
-        run: unzip -o NimTala-project.zip
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
       - name: Build APK
-        working-directory: NimTala-project/NimTala
         run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: NimTala-APK
-          path: NimTala-project/NimTala/app/build/outputs/apk/debug/app-debug.apk
+          name: NimTala-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
